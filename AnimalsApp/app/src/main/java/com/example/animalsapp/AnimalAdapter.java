@@ -29,11 +29,13 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalRowH
     @Override
     public AnimalRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
+        //******************************************************************************
+
         View view = LayoutInflater.from(context).inflate(R.layout.animal_row,parent,false);
 
         return new AnimalRowHolder(view);
     }
-
+    //******************************************************************************
     @Override
     public void onBindViewHolder(@NonNull AnimalRowHolder holder, int position) {
         holder.txtAnimalName.setText(animalData.get(position).getName());
