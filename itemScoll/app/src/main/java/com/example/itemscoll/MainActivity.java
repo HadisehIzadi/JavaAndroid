@@ -1,6 +1,8 @@
 package com.example.itemscoll;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AnimalAdaptor.MyClickInterface {
     RecyclerView recyclerView;
     ArrayList<Animal> animals;
 
@@ -44,5 +46,14 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    @Override
+    public void onItemClick(int postionOfTheAnimal) {
+        Toast.makeText(this, "Clicked "+animals.get(postionOfTheAnimal).getName(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this,Animallinfo.class);
+        intent.putExtra("image",animals.get(postionOfTheAnimal).getImage());
+        intent.putExtra("name",animals.get(postionOfTheAnimal).getName());
+        startActivity(intent);
     }
 }
