@@ -13,33 +13,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class AnimalAdaptor extends RecyclerView.Adapter<AnimalAdaptor.AnimalRowHolder> {
+
     ArrayList<Animal> animalData;
     Context context;
     MyClickInterface myClickInterface;
 
-    public AnimalAdaptor(ArrayList<Animal> animals, MainActivity mainActivity, MainActivity mainActivity1) {
-    }
-
-    public void AnimalAdaptor(ArrayList<Animal>animalData , @NonNull Context context , MyClickInterface myClickInterface) {
-
+    public AnimalAdaptor(ArrayList<Animal> animalData, Context context, MyClickInterface myClickInterface){
         this.context = context;
         this.animalData = animalData;
         this.myClickInterface = myClickInterface;
+
     }
 
     @NonNull
+    @Override
     public AnimalRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.animal_row,parent,
-                                             false);
+        View view = LayoutInflater.from(context).inflate(R.layout.animal_row,parent,false);
 
         return new AnimalRowHolder(view);
     }
 
+    @Override
     public void onBindViewHolder(@NonNull AnimalRowHolder holder, int position) {
         holder.txtAnimalName.setText(animalData.get(position).getName());
         holder.imgAnimal.setImageResource(animalData.get(position).getImage());
-
     }
 
     @Override
@@ -47,14 +45,13 @@ public class AnimalAdaptor extends RecyclerView.Adapter<AnimalAdaptor.AnimalRowH
         return animalData.size();
     }
 
-
     class AnimalRowHolder extends RecyclerView.ViewHolder{
 
         TextView txtAnimalName;
         ImageView imgAnimal;
 
         public AnimalRowHolder(@NonNull View itemView) {
-            super((itemView));
+            super(itemView);
 
             txtAnimalName = itemView.findViewById(R.id.txt_animal_name);
             imgAnimal = itemView.findViewById(R.id.img_animal);
@@ -68,13 +65,8 @@ public class AnimalAdaptor extends RecyclerView.Adapter<AnimalAdaptor.AnimalRowH
         }
     }
 
-
     interface MyClickInterface{
         void onItemClick(int postionOfTheAnimal);
     }
-
-
-
-
 
 }
