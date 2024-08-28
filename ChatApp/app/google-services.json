@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1021959541690",
+    "project_id": "chatapp-dcf8a",
+    "storage_bucket": "chatapp-dcf8a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021959541690:android:0b5441b20fc82c814ec383",
+        "android_client_info": {
+          "package_name": "com.hadiseh.chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwjV3p-giygnGLU9KbWM8QjVaLqcyu1RI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
