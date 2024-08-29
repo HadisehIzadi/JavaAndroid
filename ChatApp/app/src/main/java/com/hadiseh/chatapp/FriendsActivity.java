@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -31,6 +32,7 @@ public class FriendsActivity extends AppCompatActivity {
     private UsersAdapter usersAdapter;
     UsersAdapter.OnUserClickListener onUserClickListener;
     SwipeRefreshLayout swipeRefreshLayout;
+    String myImageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class FriendsActivity extends AppCompatActivity {
         onUserClickListener = new UsersAdapter.OnUserClickListener() {
             @Override
             public void onUserClicked(int position) {
-               /*
+
                 startActivity(new Intent(FriendsActivity.this,MessageActivity.class)
                         .putExtra("username_of_roommate",users.get(position).getUsername())
                         .putExtra("email_of_roommate",users.get(position).getEmail())
@@ -56,7 +58,7 @@ public class FriendsActivity extends AppCompatActivity {
                         .putExtra("my_img",myImageUrl)
 
                 );
-                */
+
 
             }
         };
@@ -101,6 +103,14 @@ public class FriendsActivity extends AppCompatActivity {
                 recyclerView.setLayoutManager(new LinearLayoutManager(FriendsActivity.this));
                 progressBar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
+
+                for(User user : users){
+                    if(user.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+                    {
+                        myImageUrl = user.getProfilePicture();
+                        return;
+                    }
+                }
             }
 
             @Override
