@@ -63,6 +63,13 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder> 
             super(itemView);
             txtusername = itemView.findViewById(R.id.txtUsername);
             imgView = itemView.findViewById(R.id.img_pro);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onUserClickListener.onUserClicked(getAdapterPosition());
+                }
+            });
         }
     }
 }

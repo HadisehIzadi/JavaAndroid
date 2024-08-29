@@ -73,7 +73,8 @@ public class Profile extends AppCompatActivity {
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UploadImage();
+
+                uploadImage();
             }
         });
 
@@ -99,31 +100,27 @@ public class Profile extends AppCompatActivity {
         imgProfile.setImageBitmap(bitmap);
     }
 
-    void UploadImage()
-    {
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("uploading...");
+    private void uploadImage(){
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading...");
         progressDialog.show();
 
-        FirebaseStorage.getInstance().getReference("images/" + UUID.randomUUID().toString()).putFile(imagePath).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+
+        FirebaseStorage.getInstance().getReference("images/"+ UUID.randomUUID().toString()).putFile(imagePath).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if(task.isSuccessful())
-                {
+                if (task.isSuccessful()){
                     task.getResult().getStorage().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
-                            if(task.isSuccessful())
-                            {
+                            if (task.isSuccessful()){
                                 updateProfilePicture(task.getResult().toString());
+                            }
                         }
-                    })
-
-                                                                                         }
-
+                    });
                     Toast.makeText(Profile.this, "Image Uploaded!", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                }else {
                     Toast.makeText(Profile.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
                 progressDialog.dismiss();
@@ -134,8 +131,9 @@ public class Profile extends AppCompatActivity {
                 double progress = 100.0 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount();
                 progressDialog.setMessage(" Uploaded "+(int) progress + "%");
             }
-        })
+        });
     }
+
 
     private void updateProfilePicture(String url) {
         FirebaseDatabase.getInstance().getReference("user/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/profilePicture").setValue(url);
