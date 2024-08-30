@@ -101,6 +101,7 @@ public class FriendsActivity extends AppCompatActivity {
 
                 usersAdapter = new UsersAdapter(users , FriendsActivity.this ,  onUserClickListener);
                 recyclerView.setLayoutManager(new LinearLayoutManager(FriendsActivity.this));
+                recyclerView.setAdapter(usersAdapter);
                 progressBar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
 

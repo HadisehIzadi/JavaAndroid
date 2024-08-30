@@ -1,5 +1,6 @@
 package com.hadiseh.chatapp;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -13,8 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,7 +33,7 @@ public class MessageActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ImageView imgToolbar,imgSend;
 
-    //private MessageAdapter messageAdapter;
+    private MessageAdapter messageAdapter;
     private ArrayList<Message> messages;
 
     String usernameOfTheRoommate, emailOfRoommate, chatRoomId;
@@ -38,8 +41,9 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_message);
+        usernameOfTheRoommate = getIntent().getStringExtra("username_of_roommate");
+        emailOfRoommate = getIntent().getStringExtra("email_of_roommate");
 
         recyclerView = findViewById(R.id.recyclerMessages);
         imgSend = findViewById(R.id.imgSendMessage);
@@ -47,10 +51,23 @@ public class MessageActivity extends AppCompatActivity {
         txtChattingWith = findViewById(R.id.txtChattingWith);
         progressBar= findViewById(R.id.progressMessages);
         imgToolbar= findViewById(R.id.img_toolbar);
+
+        txtChattingWith.setText(usernameOfTheRoommate);
+
         messages = new ArrayList<>();
 
-        usernameOfTheRoommate = getIntent().getStringExtra("username_of_roommate");
-        emailOfRoommate = getIntent().getStringExtra("email_of_roommate");
+        imgSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseDatabase.getInstance().getReference("messages/"+chatRoomId).push().setValue(new Message(FirebaseAuth.getInstance().getCurrentUser().getEmail(),emailOfRoommate,edtMessageInput.getText().toString()));
+                edtMessageInput.setText("");
+            }
+        });
+        messageAdapter = new MessageAdapter(messages,getIntent().getStringExtra("my_img"),getIntent().getStringExtra("img_of_roommate"),MessageActivity.this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(messageAdapter);
+
+        Glide.with(MessageActivity.this).load(getIntent().getStringExtra("img_of_roommate")).placeholder(R.drawable.account_img).error(R.drawable.account_img).into(imgToolbar);
 
         setUpChatRoom();
 
@@ -88,15 +105,15 @@ public class MessageActivity extends AppCompatActivity {
     void attachMessageListener(String chatRoomId)
     {
         FirebaseDatabase.getInstance().getReference("messages/"+ chatRoomId).addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 messages.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren())
-                {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     messages.add(dataSnapshot.getValue(Message.class));
                 }
-             //   messageAdapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(messages.size()-1);
+                messageAdapter.notifyDataSetChanged();
+                recyclerView.scrollToPosition(messages.size() - 1);
                 recyclerView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
             }
@@ -105,7 +122,8 @@ public class MessageActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        })
+        });
+
     }
 
 
